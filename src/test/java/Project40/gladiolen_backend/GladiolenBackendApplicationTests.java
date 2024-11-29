@@ -1,4 +1,4 @@
-package com.example.gladiolen_backend;
+package Project40.gladiolen_backend;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
