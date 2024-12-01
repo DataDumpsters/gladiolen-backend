@@ -23,7 +23,7 @@ public class LoginController {
                 UsernamePasswordAuthenticationToken.unauthenticated(loginRequest.username(), loginRequest.password());
         Authentication authenticationResponse =
                 this.authenticationManager.authenticate(authenticationRequest);
-        // ...
+        //TODO: Check if authenticationResponse is null
         return ResponseEntity.ok().build();
     }
 
