@@ -26,7 +26,7 @@ public class Union  {
     @OneToMany(mappedBy = "union")
     private List<User> users;
 
-    public int getTotalHours() {
-        return users.stream().mapToInt(User::getHoursWorked).sum();
-    }
+//    public int getTotalHours() {
+//        return users.stream().mapToInt(User::getHoursWorked).sum();
+//    }
 }
