@@ -19,7 +19,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     public void createUser
             (@RequestBody User user) {
         userService.createUser(user);
@@ -63,5 +63,4 @@ public class UserController {
                 .map(Role::name)
                 .collect(Collectors.toList());
     }
-
 }
