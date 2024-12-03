@@ -16,7 +16,7 @@ public class MailConfig {
         mailSender.setHost("smtp.telenet.be");
         mailSender.setPort(587);
         mailSender.setUsername("nicolas.van.dyck@telenet.be");
-        mailSender.setPassword("YoshMiepTrix3");
+        mailSender.setPassword("");
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");
