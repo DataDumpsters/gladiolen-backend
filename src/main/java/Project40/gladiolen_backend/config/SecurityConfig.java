@@ -37,7 +37,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/login","api/user/*","api/tshirt/*").permitAll()
+                        .requestMatchers("/login","/api/user/*","/api/tshirt/*").permitAll()
                         .anyRequest().authenticated()
                 )
                 .csrf(csrf -> csrf.disable())
@@ -50,7 +50,8 @@ public class SecurityConfig {
                     config.setAllowCredentials(true);
                     source.registerCorsConfiguration("/**", config);
                     cors.configurationSource(source);
-                });
+                })
+                .oneTimeTokenLogin(ott -> ott.showDefaultSubmitPage(false));
         return http.build();
     }
 
