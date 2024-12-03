@@ -3,7 +3,7 @@ package Project40.gladiolen_backend.models;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "shifts")
