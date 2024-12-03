@@ -4,6 +4,7 @@ import Project40.gladiolen_backend.models.User;
 import Project40.gladiolen_backend.repositories.UserRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,21 +14,25 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @PostConstruct
     public void init() {
         // Add some users
-        if (userRepository.count() <= 0) {
+        if (userRepository.count() <= 1) {
             User user1 = new User();
-            user1.setFirstName("John");
+            user1.setFirstName("Joan");
             user1.setLastName("Doe");
-            user1.setEmail("johndoe@test.com");
-            user1.setPassword("password");
+            user1.setEmail("joandoe@test.com");
+            user1.setPassword(passwordEncoder.encode("password"));
             userRepository.save(user1);
         }
     }
 
     public void createUser(User user){
+        if (userRepository.findByEmail(user.getEmail()) != null) {
+            throw new RuntimeException("Er bestaat reeds een gebruiker met email: " + user.getEmail());
+        }
         User user1 = User.builder()
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
@@ -35,7 +40,7 @@ public class UserService {
                 .email(user.getEmail())
                 .role(user.getRole())
                 .registryNumber(user.getRegistryNumber())
-                .password(user.getPassword())
+                .password(passwordEncoder.encode(user.getPassword()))
                 .union(user.getUnion())
                 .tshirt(user.getTshirt())
                 .shifts(user.getShifts())

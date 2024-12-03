@@ -21,8 +21,10 @@ public class User {
     @NonNull
     private String lastName;
     private String phoneNumber;
+    @Column(unique = true)
     @NonNull
     private String email;
+    @Enumerated(EnumType.ORDINAL)
     @NonNull
     private Role role;
     @NonNull
