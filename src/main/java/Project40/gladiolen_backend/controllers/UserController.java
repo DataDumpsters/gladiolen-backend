@@ -1,5 +1,6 @@
 package Project40.gladiolen_backend.controllers;
 
+import Project40.gladiolen_backend.models.Role;
 import Project40.gladiolen_backend.models.User;
 import Project40.gladiolen_backend.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -7,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/api/user")
@@ -51,6 +54,14 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public void deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
+    }
+
+    @GetMapping("/roles")
+    @ResponseStatus(HttpStatus.OK)
+    public List<String> getRoles() {
+        return Stream.of(Role.values())
+                .map(Role::name)
+                .collect(Collectors.toList());
     }
 
 }

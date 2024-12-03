@@ -30,7 +30,7 @@ public class User {
     @Column(unique = true)
     @Email
     private String email;
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     @NonNull
     private Role role;
     @NotBlank
