@@ -46,9 +46,6 @@ public class UserService {
         if (userRepository.findByEmail(user.getEmail()) != null) {
             throw new RuntimeException("Er bestaat reeds een gebruiker met email: " + user.getEmail());
         }
-        if (user.getTshirt() != null) {
-            tshirtService.createTshirt(user.getTshirt());
-        }
         User user1 = User.builder()
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
