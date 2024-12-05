@@ -12,7 +12,13 @@ public class TshirtService {
     private final TshirtRepository tshirtRepository;
 
     public void createTshirt(Tshirt tshirt) {
-        tshirtRepository.save(tshirt);
+        Tshirt newTshirt = Tshirt.builder()
+                .size(tshirt.getSize())
+                .sex(tshirt.getSex())
+                .job(tshirt.getJob())
+                .quantity(tshirt.getQuantity())
+                .build();
+        tshirtRepository.save(newTshirt);
     }
 
     public Tshirt getTshirtById(Long id) {
