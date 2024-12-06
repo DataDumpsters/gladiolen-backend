@@ -40,9 +40,11 @@ public class User {
     private String password;
 
     @ManyToOne
+    @JoinColumn(name = "union_id", referencedColumnName = "id")
     private Union union;
 
     @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "tshirt_id", referencedColumnName = "id")
     private Tshirt tshirt;
 
     @ManyToMany
