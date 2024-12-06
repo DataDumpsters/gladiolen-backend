@@ -43,6 +43,12 @@ public class UserController {
         return userService.getAllUsers();
     }
 
+//    Email validation check
+    @GetMapping("/check-email")
+    public boolean checkEmailExists(@RequestParam String email) {
+        return userService.getUserByEmail(email) != null;
+    }
+
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void updateUser
