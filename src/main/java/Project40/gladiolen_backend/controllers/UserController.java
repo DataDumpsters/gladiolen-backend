@@ -91,4 +91,10 @@ public class UserController {
 //                .map(Role::name)
 //                .collect(Collectors.toList());
 //    }
+//    Email validation check
+//@GetMapping("/check-email")
+//public boolean checkEmailExists(@RequestParam String email) {
+//    return userService.getUserByEmail(email) != null;
+}
+
 }

@@ -35,13 +35,23 @@ public class UserService {
 
     @PostConstruct
     public void init() {
+        Tshirt tshirt = Tshirt.builder()
+                .size(Size.M)
+                .sex(Sex.M)
+                .job(Job.Medewerker)
+                .quantity(1)
+                .build();
         // Add some users
         if (userRepository.count() < 1) {
             User user1 = new User();
             user1.setFirstName("Joan");
             user1.setLastName("Doe");
+            user1.setPhoneNumber("0123456789");
+            user1.setRole(Role.Admin);
             user1.setEmail("joandoe@test.com");
             user1.setPassword(passwordEncoder.encode("password"));
+            user1.setRegistryNumber("12345678");
+            user1.setTshirt(tshirt);
             userRepository.save(user1);
         }
     }

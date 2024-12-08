@@ -13,8 +13,11 @@ public class Tshirt {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Enumerated(EnumType.STRING)
     private Size size;
+    @Enumerated(EnumType.STRING)
     private Sex sex;
+    @Enumerated(EnumType.STRING)
     private Job job;
     private int quantity;
 
