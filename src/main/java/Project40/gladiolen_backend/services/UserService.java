@@ -3,7 +3,7 @@ package Project40.gladiolen_backend.services;
 import Project40.gladiolen_backend.constant.OtpContext;
 import Project40.gladiolen_backend.dto.*;
 import Project40.gladiolen_backend.mail.EmailService;
-import Project40.gladiolen_backend.models.User;
+import Project40.gladiolen_backend.models.*;
 import Project40.gladiolen_backend.repositories.UserRepository;
 import Project40.gladiolen_backend.security.utility.JwtUtils;
 import com.google.common.cache.LoadingCache;

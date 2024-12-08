@@ -95,6 +95,6 @@ public class UserController {
 //@GetMapping("/check-email")
 //public boolean checkEmailExists(@RequestParam String email) {
 //    return userService.getUserByEmail(email) != null;
-}
+//}
 
 }
