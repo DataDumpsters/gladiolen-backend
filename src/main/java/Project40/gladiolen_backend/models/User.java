@@ -8,6 +8,8 @@ import lombok.*;
 import org.springframework.lang.NonNull;
 import jakarta.validation.constraints.NotBlank;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 @Entity
@@ -38,6 +40,20 @@ public class User {
     @NotBlank
     @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$", message = "Password must be a combination of letters and numbers")
     private String password;
+
+    @Column(name = "email_verified", nullable = false)
+    private boolean isEmailVerified;
+
+    @Column(name = "is_active", nullable = false)
+    private boolean isActive;
+
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    void setUp() {
+        this.createdAt = LocalDateTime.now(ZoneId.of("+00:00"));
+    }
 
     @ManyToOne
     @JoinColumn(name = "union_id", referencedColumnName = "id")
