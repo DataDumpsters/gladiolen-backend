@@ -8,7 +8,6 @@ import Project40.gladiolen_backend.repositories.UserRepository;
 import Project40.gladiolen_backend.security.utility.JwtUtils;
 import com.google.common.cache.LoadingCache;
 import jakarta.annotation.PostConstruct;
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -133,6 +132,18 @@ public class UserService {
 
     public ResponseEntity<?> getDetails(final long userId) {
         final var user = userRepository.findById(userId).get();
+        final var response = new HashMap<String, String>();
+        response.put("email_id", user.getEmail());
+        response.put("created_at", user.getCreatedAt().toString());
+        return ResponseEntity.ok(response);
+    }
+
+    public ResponseEntity<?> forgotPassword(final ForgotPasswordRequestDto forgotPasswordRequestDto) {
+        final User user = userRepository.findByEmail(forgotPasswordRequestDto.getEmailId())
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid login credentials"));
+        user.setPassword(passwordEncoder.encode(forgotPasswordRequestDto.getNewPassword()));
+        userRepository.save(user);
         final var response = new HashMap<String, String>();
         response.put("email_id", user.getEmail());
         response.put("created_at", user.getCreatedAt().toString());

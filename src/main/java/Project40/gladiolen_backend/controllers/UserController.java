@@ -1,5 +1,6 @@
 package Project40.gladiolen_backend.controllers;
 
+import Project40.gladiolen_backend.dto.ForgotPasswordRequestDto;
 import Project40.gladiolen_backend.models.Role;
 import Project40.gladiolen_backend.models.User;
 import Project40.gladiolen_backend.security.utility.JwtUtils;
@@ -43,6 +44,16 @@ public class UserController {
 
         return userService.deleteAccount(jwtUtils.extractUserId(header));
     }
+
+
+    @PostMapping(value = "/forgot-password", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Handles forgot password requests")
+        public ResponseEntity<?> forgotPasswordHandler(@RequestBody ForgotPasswordRequestDto forgotPasswordDto) {
+            return userService.forgotPassword(forgotPasswordDto);
+        }
+
+}
 
 //    private final UserService userService;
 //
@@ -96,5 +107,3 @@ public class UserController {
 //public boolean checkEmailExists(@RequestParam String email) {
 //    return userService.getUserByEmail(email) != null;
 //}
-
-}
