@@ -52,6 +52,7 @@ public class UserService {
             user1.setPassword(passwordEncoder.encode("password"));
             user1.setRegistryNumber("12345678");
             user1.setTshirt(tshirt);
+            user1.setActive(true);
             userRepository.save(user1);
         }
     }
