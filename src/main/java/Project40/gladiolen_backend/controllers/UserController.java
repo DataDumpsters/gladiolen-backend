@@ -59,7 +59,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PostMapping(value= "create-user", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value= "/create-user", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Creates a new user account")
     public ResponseEntity<?> createUser(@RequestBody User user) {
@@ -67,17 +67,17 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PostMapping(value = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary = "Creates a new user account based on role")
-    public ResponseEntity<?> createUserBasedOnRole(@RequestBody User user) {
-        if (user.getRole() == Role.Lid) {
-            userService.createUser(user);
-        } else {
-            userService.createAccount(user);
-        }
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
+//    @PostMapping(value = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
+//    @ResponseStatus(HttpStatus.CREATED)
+//    @Operation(summary = "Creates a new user account based on role")
+//    public ResponseEntity<?> createUserBasedOnRole(@RequestBody User user) {
+//        if (user.getRole() == Role.Lid) {
+//            userService.createUser(user);
+//        } else {
+//            userService.createAccount(user);
+//        }
+//        return ResponseEntity.status(HttpStatus.CREATED).build();
+//    }
 
     @PutMapping(value = "/admin/user/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
@@ -110,11 +110,11 @@ public class UserController {
 //        return userService.getUserByEmail(email);
 //    }
 //
-//    @GetMapping("/{id}")
-//    @ResponseStatus(HttpStatus.OK)
-//    public User getUserById(@PathVariable Long id) {
-//        return userService.getUserById(id);
-//    }
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public User getUserById(@PathVariable Long id) {
+        return userService.getUserById(id);
+    }
 //
 //    @GetMapping("/all")
 //    @ResponseStatus(HttpStatus.OK)

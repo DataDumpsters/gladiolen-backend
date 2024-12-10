@@ -1,5 +1,6 @@
 package Project40.gladiolen_backend.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,6 +25,7 @@ public class Union  {
     private int numberOfParkingTickets;
 
     @OneToMany(mappedBy = "union")
+    @JsonManagedReference
     private List<User> users;
 
 //    public int getTotalHours() {

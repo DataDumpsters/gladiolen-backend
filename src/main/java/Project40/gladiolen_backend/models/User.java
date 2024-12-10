@@ -1,5 +1,7 @@
 package Project40.gladiolen_backend.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
@@ -56,10 +58,12 @@ public class User {
     }
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "union_id", referencedColumnName = "id")
     private Union union;
 
     @OneToOne(cascade = CascadeType.ALL)
+    @JsonManagedReference
     @JoinColumn(name = "tshirt_id", referencedColumnName = "id")
     private Tshirt tshirt;
 

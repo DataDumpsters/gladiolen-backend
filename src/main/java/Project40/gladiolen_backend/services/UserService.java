@@ -176,7 +176,7 @@ public class UserService {
 
     @Transactional
     public void createUser(User user) {
-        if (userRepository.findByEmail(user.getEmail()) != null) {
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new RuntimeException("Er bestaat reeds een gebruiker met email: " + user.getEmail());
         }
         if (user.getTshirt() != null) {
@@ -193,6 +193,7 @@ public class UserService {
                 .union(user.getUnion())
                 .tshirt(user.getTshirt())
                 .shifts(user.getShifts())
+                .isActive(true)
                 .build();
         userRepository.save(user1);
     }
@@ -201,10 +202,10 @@ public class UserService {
 //        return userRepository.findByEmail(email);
 //    }
 //
-//    public User getUserById(Long id) {
-//        return userRepository.findById(id).orElse(null);
-//    }
-//
+    public User getUserById(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }

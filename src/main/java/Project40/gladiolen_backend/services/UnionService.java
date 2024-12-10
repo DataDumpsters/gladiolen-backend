@@ -17,26 +17,28 @@ public class UnionService {
 
     @PostConstruct
     public void init() {
-        Union union = Union.builder()
-                .name("Union1")
-                .address("Union Address")
-                .postalCode(12345)
-                .municipality("Union Municipality")
-                .vatNumber("Union VAT Number")
-                .accountNumber("Union Account Number")
-                .numberOfParkingTickets(1)
-                .build();
-        Union union1 = Union.builder()
-                .name("Union2")
-                .address("Union Address")
-                .postalCode(12345)
-                .municipality("Union Municipality")
-                .vatNumber("Union VAT Number")
-                .accountNumber("Union Account Number")
-                .numberOfParkingTickets(1)
-                .build();
-        unionRepository.save(union);
-        unionRepository.save(union1);
+        if (unionRepository.findAll().isEmpty()) {
+            Union union = Union.builder()
+                    .name("Union1")
+                    .address("Union Address")
+                    .postalCode(12345)
+                    .municipality("Union Municipality")
+                    .vatNumber("Union VAT Number")
+                    .accountNumber("Union Account Number")
+                    .numberOfParkingTickets(1)
+                    .build();
+            Union union1 = Union.builder()
+                    .name("Union2")
+                    .address("Union Address")
+                    .postalCode(12345)
+                    .municipality("Union Municipality")
+                    .vatNumber("Union VAT Number")
+                    .accountNumber("Union Account Number")
+                    .numberOfParkingTickets(1)
+                    .build();
+            unionRepository.save(union);
+            unionRepository.save(union1);
+        }
     }
 
     @Transactional
