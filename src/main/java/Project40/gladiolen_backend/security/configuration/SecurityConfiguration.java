@@ -24,34 +24,34 @@ import java.util.Arrays;
 @AllArgsConstructor
 public class SecurityConfiguration {
 
-  private final CustomUserDetailService customUserDetailService;
-  private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final CustomUserDetailService customUserDetailService;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-  @Bean
-  public AuthenticationManager authenticationManager(
-    AuthenticationConfiguration configuration) throws Exception {
+    @Bean
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration configuration) throws Exception {
 
-    return configuration.getAuthenticationManager();
-  }
+        return configuration.getAuthenticationManager();
+    }
 
-  @Bean
-  public UserDetailsService userDetailsService() {
-    return customUserDetailService;
-  }
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return customUserDetailService;
+    }
 
-  @Bean
-  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-    http.cors(Customizer.withDefaults())
-      .csrf(AbstractHttpConfigurer::disable)
-      .sessionManagement(session ->
-        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-      .authorizeHttpRequests(auth -> auth
-        .requestMatchers(Arrays.stream(ApiPathExclusion.values())
-          .map(ApiPathExclusion::getPath)
-          .toArray(String[]::new)).permitAll()
-        .anyRequest().authenticated())
-      .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-    return http.build();
-  }
+        http.cors(Customizer.withDefaults())
+                .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(Arrays.stream(ApiPathExclusion.values())
+                                .map(ApiPathExclusion::getPath)
+                                .toArray(String[]::new)).permitAll()
+                        .anyRequest().authenticated())
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        return http.build();
+    }
 }
