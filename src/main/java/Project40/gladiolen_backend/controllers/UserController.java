@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -104,13 +105,13 @@ public class UserController {
 //        userService.createUser(user);
 //    }
 //
-//    @GetMapping
-//    @ResponseStatus(HttpStatus.OK)
-//    public User getUserByEmail(@RequestParam String email) {
-//        return userService.getUserByEmail(email);
-//    }
-//
-    @GetMapping("/{id}")
+    @GetMapping("/user/check-email/")
+    @ResponseStatus(HttpStatus.OK)
+    public Optional<User> getUserByEmail(@RequestParam String email) {
+        return userService.getUserByEmail(email);
+    }
+
+    @GetMapping("/user/{id}")
     @ResponseStatus(HttpStatus.OK)
     public User getUserById(@PathVariable Long id) {
         return userService.getUserById(id);

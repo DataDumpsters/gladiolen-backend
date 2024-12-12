@@ -13,14 +13,14 @@ public class TshirtService {
     private final TshirtRepository tshirtRepository;
 
     @Transactional
-    public void createTshirt(Tshirt tshirt) {
+    public Tshirt createTshirt(Tshirt tshirt) {
         Tshirt newTshirt = Tshirt.builder()
                 .size(tshirt.getSize())
                 .sex(tshirt.getSex())
                 .job(tshirt.getJob())
                 .quantity(tshirt.getQuantity())
                 .build();
-        tshirtRepository.save(newTshirt);
+        return tshirtRepository.save(newTshirt);
     }
 
     public Tshirt getTshirtById(Long id) {

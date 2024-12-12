@@ -35,14 +35,20 @@ public class UserService {
 
     @PostConstruct
     public void init() {
-        Tshirt tshirt = Tshirt.builder()
-                .size(Size.M)
-                .sex(Sex.M)
-                .job(Job.Medewerker)
-                .quantity(1)
-                .build();
-        // Add some users
-        if (userRepository.count() < 1) {
+        if (userRepository.count() < 2) {
+            Tshirt tshirt1 = Tshirt.builder()
+                    .size(Size.M)
+                    .sex(Sex.M)
+                    .job(Job.Medewerker)
+                    .quantity(1)
+                    .build();
+            Tshirt tshirt2 = Tshirt.builder()
+                    .size(Size.L)
+                    .sex(Sex.V)
+                    .job(Job.Medewerker)
+                    .quantity(1)
+                    .build();
+
             User user1 = new User();
             user1.setFirstName("Joan");
             user1.setLastName("Doe");
@@ -51,11 +57,25 @@ public class UserService {
             user1.setEmail("joandoe@test.com");
             user1.setPassword(passwordEncoder.encode("password"));
             user1.setRegistryNumber("12345678");
-            user1.setTshirt(tshirt);
+            user1.setTshirt(tshirt1);
             user1.setActive(true);
+
+            User user2 = new User();
+            user2.setFirstName("Charel");
+            user2.setLastName("Doe");
+            user2.setPhoneNumber("0123456789");
+            user2.setRole(Role.Lid);
+            user2.setEmail("Chareldoe@test.com");
+            user2.setPassword(passwordEncoder.encode("password123"));
+            user2.setRegistryNumber("12345678");
+            user2.setTshirt(tshirt2);
+            user2.setActive(true);
+
             userRepository.save(user1);
+            userRepository.save(user2);
         }
     }
+
     public ResponseEntity<?> createAccount(
             final SignupRequestDto userAccountCreationRequestDto) {
         if (userRepository.existsByEmail(userAccountCreationRequestDto.getEmailId())) {
@@ -177,10 +197,12 @@ public class UserService {
     @Transactional
     public void createUser(User user) {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
-            throw new RuntimeException("Er bestaat reeds een gebruiker met email: " + user.getEmail());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Er bestaat reeds een gebruiker met dit emailadres");
         }
+        Tshirt savedTshirt = null;
         if (user.getTshirt() != null) {
-            tshirtService.createTshirt(user.getTshirt());
+            // Save and get the managed Tshirt entity
+            savedTshirt = tshirtService.createTshirt(user.getTshirt());
         }
         User user1 = User.builder()
                 .firstName(user.getFirstName())
@@ -190,18 +212,18 @@ public class UserService {
                 .role(user.getRole())
                 .registryNumber(user.getRegistryNumber())
                 .password(passwordEncoder.encode(user.getPassword()))
-                .union(user.getUnion())
-                .tshirt(user.getTshirt())
+                .union(user.getUnion() != null ? user.getUnion() : null)
+                .tshirt(savedTshirt)
                 .shifts(user.getShifts())
                 .isActive(true)
                 .build();
         userRepository.save(user1);
     }
 
-//    public User getUserByEmail(String email) {
-//        return userRepository.findByEmail(email);
-//    }
-//
+    public Optional<User> getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
     public User getUserById(Long id) {
         return userRepository.findById(id).orElse(null);
     }
