@@ -4,6 +4,7 @@ import Project40.gladiolen_backend.constant.OtpContext;
 import Project40.gladiolen_backend.dto.*;
 import Project40.gladiolen_backend.mail.EmailService;
 import Project40.gladiolen_backend.models.*;
+import Project40.gladiolen_backend.repositories.UnionRepository;
 import Project40.gladiolen_backend.repositories.UserRepository;
 import Project40.gladiolen_backend.security.utility.JwtUtils;
 import com.google.common.cache.LoadingCache;
@@ -28,6 +29,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final TshirtService tshirtService;
+    private final UnionRepository unionRepository;
     private final PasswordEncoder passwordEncoder;
     private final LoadingCache<String, Integer> oneTimePasswordCache;
     private final EmailService emailService;
@@ -201,8 +203,12 @@ public class UserService {
         }
         Tshirt savedTshirt = null;
         if (user.getTshirt() != null) {
-            // Save and get the managed Tshirt entity
             savedTshirt = tshirtService.createTshirt(user.getTshirt());
+        }
+        Union managedUnion = null;
+        if (user.getUnion() != null && user.getUnion().getId() != null) {
+            managedUnion = unionRepository.findById(user.getUnion().getId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Union not found"));
         }
         User user1 = User.builder()
                 .firstName(user.getFirstName())
@@ -212,7 +218,7 @@ public class UserService {
                 .role(user.getRole())
                 .registryNumber(user.getRegistryNumber())
                 .password(passwordEncoder.encode(user.getPassword()))
-                .union(user.getUnion() != null ? user.getUnion() : null)
+                .union(managedUnion)
                 .tshirt(savedTshirt)
                 .shifts(user.getShifts())
                 .isActive(true)
