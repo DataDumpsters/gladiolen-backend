@@ -1,6 +1,7 @@
 package Project40.gladiolen_backend.models;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
@@ -14,7 +15,6 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Data
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = Union.class)
 public class Union  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +28,7 @@ public class Union  {
     private int numberOfParkingTickets;
 
     @OneToMany(mappedBy = "union", cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @JsonIgnoreProperties("union")
     private List<User> users;
 
 //    public int getTotalHours() {
