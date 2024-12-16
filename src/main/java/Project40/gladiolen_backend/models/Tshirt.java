@@ -1,5 +1,6 @@
 package Project40.gladiolen_backend.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,5 +23,6 @@ public class Tshirt {
     private int quantity;
 
     @OneToOne(mappedBy = "tshirt")
+    @JsonBackReference
     private User user;
 }

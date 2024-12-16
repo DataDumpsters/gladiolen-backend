@@ -1,5 +1,9 @@
 package Project40.gladiolen_backend.models;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,13 +21,14 @@ public class Union  {
     private Long id;
     private String name;
     private String address;
-    private int postalCode;
+    private String postalCode;
     private String municipality;
     private String vatNumber;
     private String accountNumber;
     private int numberOfParkingTickets;
 
-    @OneToMany(mappedBy = "union")
+    @OneToMany(mappedBy = "union", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("union")
     private List<User> users;
 
 //    public int getTotalHours() {

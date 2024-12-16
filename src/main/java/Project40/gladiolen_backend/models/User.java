@@ -1,5 +1,6 @@
 package Project40.gladiolen_backend.models;
 
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
@@ -55,8 +56,9 @@ public class User {
         this.createdAt = LocalDateTime.now(ZoneId.of("+00:00"));
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "union_id", referencedColumnName = "id")
+    @JsonIgnoreProperties({"users"})
     private Union union;
 
     @OneToOne(cascade = CascadeType.ALL)
