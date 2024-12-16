@@ -4,6 +4,7 @@ import Project40.gladiolen_backend.constant.OtpContext;
 import Project40.gladiolen_backend.dto.*;
 import Project40.gladiolen_backend.mail.EmailService;
 import Project40.gladiolen_backend.models.*;
+import Project40.gladiolen_backend.repositories.UnionRepository;
 import Project40.gladiolen_backend.repositories.UserRepository;
 import Project40.gladiolen_backend.security.utility.JwtUtils;
 import com.google.common.cache.LoadingCache;
@@ -20,6 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -28,6 +30,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final TshirtService tshirtService;
+    private final UnionRepository unionRepository;
     private final PasswordEncoder passwordEncoder;
     private final LoadingCache<String, Integer> oneTimePasswordCache;
     private final EmailService emailService;
@@ -35,14 +38,20 @@ public class UserService {
 
     @PostConstruct
     public void init() {
-        Tshirt tshirt = Tshirt.builder()
-                .size(Size.M)
-                .sex(Sex.M)
-                .job(Job.Medewerker)
-                .quantity(1)
-                .build();
-        // Add some users
-        if (userRepository.count() < 1) {
+        if (userRepository.count() < 2) {
+            Tshirt tshirt1 = Tshirt.builder()
+                    .size(Size.M)
+                    .sex(Sex.M)
+                    .job(Job.Medewerker)
+                    .quantity(1)
+                    .build();
+            Tshirt tshirt2 = Tshirt.builder()
+                    .size(Size.L)
+                    .sex(Sex.V)
+                    .job(Job.Medewerker)
+                    .quantity(1)
+                    .build();
+
             User user1 = new User();
             user1.setFirstName("Joan");
             user1.setLastName("Doe");
@@ -51,11 +60,25 @@ public class UserService {
             user1.setEmail("joandoe@test.com");
             user1.setPassword(passwordEncoder.encode("password"));
             user1.setRegistryNumber("12345678");
-            user1.setTshirt(tshirt);
+            user1.setTshirt(tshirt1);
             user1.setActive(true);
+
+            User user2 = new User();
+            user2.setFirstName("Charel");
+            user2.setLastName("Doe");
+            user2.setPhoneNumber("0123456789");
+            user2.setRole(Role.Lid);
+            user2.setEmail("Chareldoe@test.com");
+            user2.setPassword(passwordEncoder.encode("password123"));
+            user2.setRegistryNumber("12345678");
+            user2.setTshirt(tshirt2);
+            user2.setActive(true);
+
             userRepository.save(user1);
+            userRepository.save(user2);
         }
     }
+
     public ResponseEntity<?> createAccount(
             final SignupRequestDto userAccountCreationRequestDto) {
         if (userRepository.existsByEmail(userAccountCreationRequestDto.getEmailId())) {
@@ -174,67 +197,74 @@ public class UserService {
                         .accessToken(jwtUtils.generateAccessToken(user)).build());
     }
 
-//    @Transactional
-//    public void createUser(User user) {
-//        if (userRepository.findByEmail(user.getEmail()) != null) {
-//            throw new RuntimeException("Er bestaat reeds een gebruiker met email: " + user.getEmail());
-//        }
-//        if (user.getTshirt() != null) {
-//            tshirtService.createTshirt(user.getTshirt());
-//        }
-//        User user1 = User.builder()
-//                .firstName(user.getFirstName())
-//                .lastName(user.getLastName())
-//                .phoneNumber(user.getPhoneNumber())
-//                .email(user.getEmail())
-//                .role(user.getRole())
-//                .registryNumber(user.getRegistryNumber())
-//                .password(passwordEncoder.encode(user.getPassword()))
-//                .union(user.getUnion())
-//                .tshirt(user.getTshirt())
-//                .shifts(user.getShifts())
-//                .build();
-//        userRepository.save(user1);
-//    }
+    @Transactional
+    public void createUser(User user) {
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Er bestaat reeds een gebruiker met dit emailadres");
+        }
+        Tshirt savedTshirt = null;
+        if (user.getTshirt() != null) {
+            savedTshirt = tshirtService.createTshirt(user.getTshirt());
+        }
+        Union managedUnion = null;
+        if (user.getUnion() != null && user.getUnion().getId() != null) {
+            managedUnion = unionRepository.findById(user.getUnion().getId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Union not found"));
+        }
+        User user1 = User.builder()
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .phoneNumber(user.getPhoneNumber())
+                .email(user.getEmail())
+                .role(user.getRole())
+                .registryNumber(user.getRegistryNumber())
+                .password(passwordEncoder.encode(user.getPassword()))
+                .union(managedUnion)
+                .tshirt(savedTshirt)
+                .shifts(user.getShifts())
+                .isActive(true)
+                .build();
+        userRepository.save(user1);
+    }
 
-//    public User getUserByEmail(String email) {
-//        return userRepository.findByEmail(email);
-//    }
-//
-//    public User getUserById(Long id) {
-//        return userRepository.findById(id).orElse(null);
-//    }
-//
-//    public List<User> getAllUsers() {
-//        return userRepository.findAll();
-//    }
-//
-//    @Transactional
-//    public void updateUser(Long id, User user) {
-//        User user1 = userRepository.findById(id).orElse(null);
-//        if (user1 != null) {
-//            if (user1.getTshirt() != null) {
-//                tshirtService.updateTshirt(user1.getTshirt().getId(), user.getTshirt());
-//            }
-//            user1.setFirstName(user.getFirstName());
-//            user1.setLastName(user.getLastName());
-//            user1.setPhoneNumber(user.getPhoneNumber());
-//            user1.setEmail(user.getEmail());
-//            user1.setRole(user.getRole());
-//            user1.setRegistryNumber(user.getRegistryNumber());
-//            user1.setPassword(user.getPassword());
-//            user1.setUnion(user.getUnion());
-//            user1.setTshirt(user.getTshirt());
-//            user1.setShifts(user.getShifts());
-//            userRepository.save(user1);
-//        }
-//    }
-//
-//    public void deleteUser(Long id) {
-//        User user = userRepository.findById(id).orElse(null);
-//        if (user != null) {
-//            tshirtService.deleteTshirt(user.getTshirt().getId());
-//        }
-//        userRepository.deleteById(id);
-//    }
+    public Optional<User> getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    public User getUserById(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    @Transactional
+    public void updateUser(Long id, User user) {
+        User user1 = userRepository.findById(id).orElse(null);
+        if (user1 != null) {
+            if (user1.getTshirt() != null) {
+                tshirtService.updateTshirt(user1.getTshirt().getId(), user.getTshirt());
+            }
+            user1.setFirstName(user.getFirstName());
+            user1.setLastName(user.getLastName());
+            user1.setPhoneNumber(user.getPhoneNumber());
+            user1.setEmail(user.getEmail());
+            user1.setRole(user.getRole());
+            user1.setRegistryNumber(user.getRegistryNumber());
+            user1.setPassword(user.getPassword());
+            user1.setUnion(user.getUnion());
+            user1.setTshirt(user.getTshirt());
+            user1.setShifts(user.getShifts());
+            userRepository.save(user1);
+        }
+    }
+
+    public void deleteUser(Long id) {
+        User user = userRepository.findById(id).orElse(null);
+        if (user != null) {
+            tshirtService.deleteTshirt(user.getTshirt().getId());
+        }
+        userRepository.deleteById(id);
+    }
 }
