@@ -23,7 +23,7 @@ public enum ApiPathExclusion {
   SIGN_UP("/sign-up"),
   OTP_VERIFICATION("/verify-otp"),
   REFRESH_TOKEN("/refresh-token"),
-  FORGOT_PASSWORD("/forgot-password");
+  RESET_PASSWORD_REQUEST("/request-password-reset");
 
   private final String path;
 }

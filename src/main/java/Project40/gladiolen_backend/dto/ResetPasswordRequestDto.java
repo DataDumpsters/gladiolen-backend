@@ -9,11 +9,7 @@ import lombok.extern.jackson.Jacksonized;
 @Getter
 @Builder
 @Jacksonized
-public class ForgotPasswordRequestDto {
-
-    @Email
-    @NotBlank
-    private final String emailId;
+public class ResetPasswordRequestDto {
 
     @NotBlank
     private final String newPassword;
