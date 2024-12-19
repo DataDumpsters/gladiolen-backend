@@ -21,7 +21,6 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -142,6 +141,10 @@ public class UserService {
                 user.setActive(false);
                 user = userRepository.save(user);
                 return ResponseEntity.ok().build();
+            } else if (otpVerificationRequestDto.getContext().equals(OtpContext.RESET_PASSWORD)) {
+                return ResponseEntity
+                        .ok(LoginSuccessDto.builder().accessToken(jwtUtils.generateAccessToken(user))
+                                .refreshToken(jwtUtils.generateRefreshToken(user)).build());
             }
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         } else {
@@ -157,6 +160,37 @@ public class UserService {
 
     public ResponseEntity<?> getDetails(final long userId) {
         final var user = userRepository.findById(userId).get();
+        final var response = new HashMap<String, String>();
+        response.put("email_id", user.getEmail());
+        response.put("created_at", user.getCreatedAt().toString());
+        return ResponseEntity.ok(response);
+    }
+
+    public ResponseEntity<?> requestPasswordReset(final EmailRequestDto emailRequestDto) {
+        final User user = userRepository.findByEmail(emailRequestDto.getEmailId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Email not found"));
+        sendOtp(user, "Password Reset OTP");
+        return ResponseEntity.ok(getOtpSendMessage());
+    }
+
+//    public ResponseEntity<?> resetPassword(final ResetPasswordRequestDto resetPasswordRequestDto) {
+//        final User user = userRepository.findByEmail(resetPasswordRequestDto.getEmailId())
+//                .orElseThrow(
+//                        () -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid login credentials"));
+//        user.setPassword(passwordEncoder.encode(resetPasswordRequestDto.getNewPassword()));
+//        userRepository.save(user);
+//        final var response = new HashMap<String, String>();
+//        response.put("email_id", user.getEmail());
+//        response.put("created_at", user.getCreatedAt().toString());
+//        return ResponseEntity.ok(response);
+//    }
+
+    public ResponseEntity<?> resetPassword(final String header, final ResetPasswordRequestDto resetPasswordRequestDto) {
+        String email = jwtUtils.extractEmail(header);
+        final User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email-id"));
+        user.setPassword(passwordEncoder.encode(resetPasswordRequestDto.getNewPassword()));
+        userRepository.save(user);
         final var response = new HashMap<String, String>();
         response.put("email_id", user.getEmail());
         response.put("created_at", user.getCreatedAt().toString());
