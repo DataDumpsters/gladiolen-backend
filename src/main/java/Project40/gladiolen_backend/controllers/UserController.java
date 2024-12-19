@@ -1,5 +1,7 @@
 package Project40.gladiolen_backend.controllers;
 
+import Project40.gladiolen_backend.dto.EmailRequestDto;
+import Project40.gladiolen_backend.dto.ResetPasswordRequestDto;
 import Project40.gladiolen_backend.models.Role;
 import Project40.gladiolen_backend.models.User;
 import Project40.gladiolen_backend.security.utility.JwtUtils;
@@ -52,6 +54,29 @@ public class UserController {
         return userService.deleteAccount(jwtUtils.extractUserId(header));
     }
 
+    @PostMapping(value = "/request-password-reset", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Requests a password reset and sends an OTP to the user's email")
+    public ResponseEntity<?> requestPasswordReset(@RequestBody EmailRequestDto emailRequestDto) {
+        return userService.requestPasswordReset(emailRequestDto);
+    }
+
+    @PostMapping(value = "/reset-password", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Resets the user's password")
+    public ResponseEntity<?> resetPassword(
+            @RequestHeader(required = true, name = "Authorization") final String header,
+            @RequestBody ResetPasswordRequestDto resetPasswordRequestDto) {
+        return userService.resetPassword(header, resetPasswordRequestDto);
+    }
+//
+//    @PostMapping(value = "/reset-password", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+//    @ResponseStatus(HttpStatus.OK)
+//    @Operation(summary = "Handles forgot password requests")
+//    public ResponseEntity<?> resetPasswordHandler(@RequestBody ResetPasswordRequestDto resetPasswordDto) {
+//        return userService.resetPassword(resetPasswordDto);
+//    }
+
     @PostMapping(value = "/admin/user", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Creates a new user account")
@@ -96,7 +121,7 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-//    private final UserService userService;
+    //    private final UserService userService;
 //
 //    @PostMapping
 //    @ResponseStatus(HttpStatus.CREATED)
@@ -116,7 +141,7 @@ public class UserController {
     public User getUserById(@PathVariable Long id) {
         return userService.getUserById(id);
     }
-//
+    //
 //    @GetMapping("/all")
 //    @ResponseStatus(HttpStatus.OK)
 //    public List<User> getAllUsers() {
