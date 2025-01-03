@@ -1,7 +1,7 @@
 services:
   timescaledb:
     image: timescale/timescaledb-ha:pg17
-    container_name: timescaledb-gladiolen
+    container_name: testdb
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 1234
