@@ -56,7 +56,7 @@ public class UserService {
                 user.setFirstName("User" + i);
                 user.setLastName("Doe" + i);
                 user.setPhoneNumber("012345678" + i);
-                user.setRole(i % 2 == 0 ? Role.Admin : Role.Lid);
+                user.setRole(i % 2 == 0 ? Role.Admin : Role.Hoofdverantwoordelijke);
                 user.setEmail("user" + i + "@test.com");
                 user.setPassword(passwordEncoder.encode("password" + i));
                 user.setRegistryNumber("1234567" + i);
