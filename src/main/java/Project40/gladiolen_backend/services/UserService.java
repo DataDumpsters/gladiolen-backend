@@ -268,7 +268,11 @@ public class UserService {
         if (user1 != null) {
             if (user1.getTshirt() != null) {
                 tshirtService.updateTshirt(user1.getTshirt().getId(), user.getTshirt());
+            } else if (user.getTshirt() != null) {
+                Tshirt newTshirt = tshirtService.createTshirt(user.getTshirt());
+                user1.setTshirt(newTshirt);
             }
+
             user1.setFirstName(user.getFirstName());
             user1.setLastName(user.getLastName());
             user1.setPhoneNumber(user.getPhoneNumber());
@@ -277,11 +281,61 @@ public class UserService {
             user1.setRegistryNumber(user.getRegistryNumber());
             user1.setPassword(user.getPassword());
             user1.setUnion(user.getUnion());
-            user1.setTshirt(user.getTshirt());
             user1.setShifts(user.getShifts());
             userRepository.save(user1);
         }
     }
+
+//    @Transactional
+//    public void updateUser(Long id, User user) {
+//        User user1 = userRepository.findById(id).orElse(null);
+//        if (user1 != null) {
+//            if (user1.getTshirt() != null) {
+//                tshirtService.updateTshirt(user1.getTshirt().getId(), user.getTshirt());
+//            }
+//            user1.setFirstName(user.getFirstName());
+//            user1.setLastName(user.getLastName());
+//            user1.setPhoneNumber(user.getPhoneNumber());
+//            user1.setEmail(user.getEmail());
+//            user1.setRole(user.getRole());
+//            user1.setRegistryNumber(user.getRegistryNumber());
+//            user1.setPassword(user.getPassword());
+//            user1.setUnion(user.getUnion());
+//            user1.setTshirt(user.getTshirt());
+//            user1.setShifts(user.getShifts());
+//            userRepository.save(user1);
+//        }
+//    }
+//@Transactional
+//public void updateUser(Long id, User user) {
+//    User user1 = userRepository.findById(id).orElse(null);
+//    if (user1 != null) {
+//        Tshirt existingTshirt = user1.getTshirt();
+//        Tshirt newTshirt = user.getTshirt();
+//
+//        if (existingTshirt != null && newTshirt != null) {
+//            existingTshirt.setSize(newTshirt.getSize());
+//            existingTshirt.setSex(newTshirt.getSex());
+//            existingTshirt.setJob(newTshirt.getJob());
+//            existingTshirt.setQuantity(newTshirt.getQuantity());
+//        } else if (newTshirt != null) {
+//            user1.setTshirt(newTshirt);
+//        } else {
+//            user1.setTshirt(null);
+//        }
+//
+//        user1.setFirstName(user.getFirstName());
+//        user1.setLastName(user.getLastName());
+//        user1.setPhoneNumber(user.getPhoneNumber());
+//        user1.setEmail(user.getEmail());
+//        user1.setRole(user.getRole());
+//        user1.setRegistryNumber(user.getRegistryNumber());
+//        user1.setPassword(user.getPassword());
+//        user1.setUnion(user.getUnion());
+//        user1.setShifts(user.getShifts());
+//        userRepository.save(user1);
+//    }
+//}
 
     public void deleteUser(Long id) {
         User user = userRepository.findById(id).orElse(null);
