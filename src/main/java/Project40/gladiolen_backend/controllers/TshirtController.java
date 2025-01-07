@@ -1,12 +1,13 @@
 package Project40.gladiolen_backend.controllers;
 
-import Project40.gladiolen_backend.models.Job;
-import Project40.gladiolen_backend.models.Sex;
-import Project40.gladiolen_backend.models.Size;
-import Project40.gladiolen_backend.models.Tshirt;
+import Project40.gladiolen_backend.dto.TshirtCountDto;
+import Project40.gladiolen_backend.models.*;
 import Project40.gladiolen_backend.services.TshirtService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,16 +21,38 @@ public class TshirtController {
 
     private final TshirtService tshirtService;
 
-    @PostMapping
+//    @PostMapping
+//    @ResponseStatus(HttpStatus.CREATED)
+//    public void createTshirt(@RequestBody Tshirt tshirt) {
+//        tshirtService.createTshirt(tshirt);
+//    }
+
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public void createTshirt(@RequestBody Tshirt tshirt) {
+    @Operation(summary = "Creates a new tshirt")
+    public ResponseEntity<?> createTshirt(@RequestBody Tshirt tshirt) {
         tshirtService.createTshirt(tshirt);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Tshirt getTshirtById(@PathVariable Long id) {
         return tshirtService.getTshirtById(id);
+    }
+
+    @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(value = HttpStatus.OK)
+    @Operation(summary = "Returns all tshirt details")
+    public List<Tshirt> allTshirtsRetrievalHandler() {
+        return tshirtService.getAllTshirts();
+    }
+
+    @GetMapping(value = "/counts", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(value = HttpStatus.OK)
+    @Operation(summary = "Returns tshirt counts by role, sex, and size")
+    public List<TshirtCountDto> getTshirtCountsByRoleSexAndSize() {
+        return tshirtService.getTshirtCountsByRoleSexAndSize();
     }
 
     @PutMapping("/{id}")

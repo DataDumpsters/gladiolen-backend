@@ -37,44 +37,33 @@ public class UserService {
 
     @PostConstruct
     public void init() {
-        if (userRepository.count() < 2) {
-            Tshirt tshirt1 = Tshirt.builder()
-                    .size(Size.M)
-                    .sex(Sex.M)
-                    .job(Job.Medewerker)
-                    .quantity(1)
-                    .build();
-            Tshirt tshirt2 = Tshirt.builder()
-                    .size(Size.L)
-                    .sex(Sex.V)
-                    .job(Job.Medewerker)
-                    .quantity(1)
-                    .build();
+        if (userRepository.count() < 20) {
+            List<Tshirt> tshirts = List.of(
+                    Tshirt.builder().size(Size.M).sex(Sex.M).job(Job.Medewerker).quantity(1).build(),
+                    Tshirt.builder().size(Size.L).sex(Sex.V).job(Job.Medewerker).quantity(2).build(),
+                    Tshirt.builder().size(Size.S).sex(Sex.M).job(Job.Boekel_Boulevard).quantity(1).build(),
+                    Tshirt.builder().size(Size.XL).sex(Sex.V).job(Job.Boekel_Boulevard).quantity(2).build()
+            );
 
-            User user1 = new User();
-            user1.setFirstName("Joan");
-            user1.setLastName("Doe");
-            user1.setPhoneNumber("0123456789");
-            user1.setRole(Role.Admin);
-            user1.setEmail("joandoe@test.com");
-            user1.setPassword(passwordEncoder.encode("password"));
-            user1.setRegistryNumber("12345678");
-            user1.setTshirt(tshirt1);
-            user1.setActive(true);
-
-            User user2 = new User();
-            user2.setFirstName("Charel");
-            user2.setLastName("Doe");
-            user2.setPhoneNumber("0123456789");
-            user2.setRole(Role.Lid);
-            user2.setEmail("Chareldoe@test.com");
-            user2.setPassword(passwordEncoder.encode("password123"));
-            user2.setRegistryNumber("12345678");
-            user2.setTshirt(tshirt2);
-            user2.setActive(true);
-
-            userRepository.save(user1);
-            userRepository.save(user2);
+            for (int i = 1; i <= 20; i++) {
+                Tshirt tshirt = Tshirt.builder()
+                        .size(tshirts.get(i % tshirts.size()).getSize())
+                        .sex(tshirts.get(i % tshirts.size()).getSex())
+                        .job(tshirts.get(i % tshirts.size()).getJob())
+                        .quantity(tshirts.get(i % tshirts.size()).getQuantity())
+                        .build();
+                User user = new User();
+                user.setFirstName("User" + i);
+                user.setLastName("Doe" + i);
+                user.setPhoneNumber("012345678" + i);
+                user.setRole(i % 2 == 0 ? Role.Admin : Role.Lid);
+                user.setEmail("user" + i + "@test.com");
+                user.setPassword(passwordEncoder.encode("password" + i));
+                user.setRegistryNumber("1234567" + i);
+                user.setTshirt(tshirt);
+                user.setActive(true);
+                userRepository.save(user);
+            }
         }
     }
 
