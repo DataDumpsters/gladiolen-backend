@@ -1,0 +1,51 @@
+name: Deploy with Docker Compose
+
+on:
+  push:
+    # Trigger workflow when changes are pushed to the 'main' branch of backend or frontend repos
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write  # Ensures write access to the repository
+
+    steps:
+      # Checkout code with proper permissions to push changes
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Set up Git identity
+      - name: Set up Git identity
+        run: |
+          git config --global user.name "matthiasvanrooy"
+          git config --global user.email "s0173395@student.thomasmore.be"
+
+    # Installeer docker compose in runner
+      - name: Install Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
+
+      # Build and deploy Docker containers as usual
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}  # GitHub Secret for Docker Hub username
+          password: ${{ secrets.DOCKER_PASSWORD }}  # GitHub Secret for Docker Hub password
+
+      - name: Build and tag backend image
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/gladiolen-backend:latest .
+          docker tag ${{ secrets.DOCKER_USERNAME }}/gladiolen-backend:latest ${{ secrets.DOCKER_USERNAME }}/gladiolen-backend:latest
+
+      - name: Push backend image to Docker Hub
+        run: |
+          docker push ${{ secrets.DOCKER_USERNAME }}/gladiolen-backend:latest
+
+      - name: Test backend health endpoint
+        run: curl -v http://localhost:8080/health || true

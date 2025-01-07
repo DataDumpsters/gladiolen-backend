@@ -50,7 +50,6 @@ public class SecurityConfiguration {
                         .requestMatchers(Arrays.stream(ApiPathExclusion.values())
                                 .map(ApiPathExclusion::getPath)
                                 .toArray(String[]::new)).permitAll()
-                        .requestMatchers("/health").permitAll() // Allow public access to /health
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
