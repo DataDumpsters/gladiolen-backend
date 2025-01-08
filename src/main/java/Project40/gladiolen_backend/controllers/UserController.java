@@ -85,6 +85,14 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @PostMapping(value = "/admin/users", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Creates new user accounts")
+    public ResponseEntity<?> createUsers(@RequestBody List<User> users) {
+        userService.createUsers(users);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
     @PostMapping(value= "/create-user", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Creates a new user account")
