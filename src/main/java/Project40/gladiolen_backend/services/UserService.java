@@ -85,6 +85,38 @@ public class UserService {
         return ResponseEntity.ok(getOtpSendMessage());
     }
 
+    @Transactional
+    public void createUsers(List<User> users) {
+        for (User user : users) {
+            if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Er bestaat reeds een gebruiker met dit emailadres");
+            }
+            Tshirt savedTshirt = null;
+            if (user.getTshirt() != null) {
+                savedTshirt = tshirtService.createTshirt(user.getTshirt());
+            }
+            Union managedUnion = null;
+            if (user.getUnion() != null && user.getUnion().getId() != null) {
+                managedUnion = unionRepository.findById(user.getUnion().getId())
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Union not found"));
+            }
+            User user1 = User.builder()
+                    .firstName(user.getFirstName())
+                    .lastName(user.getLastName())
+                    .phoneNumber(user.getPhoneNumber())
+                    .email(user.getEmail())
+                    .role(user.getRole())
+                    .registryNumber(user.getRegistryNumber())
+                    .password(passwordEncoder.encode(user.getPassword()))
+                    .union(managedUnion)
+                    .tshirt(savedTshirt)
+                    .shifts(user.getShifts())
+                    .isActive(true)
+                    .build();
+            userRepository.save(user1);
+        }
+    }
+
     public ResponseEntity<?> login(final LoginRequestDto userLoginRequestDto) {
         final User user = userRepository.findByEmail(userLoginRequestDto.getEmailId())
                 .orElseThrow(
