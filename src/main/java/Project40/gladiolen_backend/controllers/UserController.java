@@ -138,7 +138,7 @@ public class UserController {
 //        userService.createUser(user);
 //    }
 //
-    @GetMapping("/user/check-email/")
+    @GetMapping("/user/check-email")
     @ResponseStatus(HttpStatus.OK)
     public Optional<User> getUserByEmail(@RequestParam String email) {
         return userService.getUserByEmail(email);
