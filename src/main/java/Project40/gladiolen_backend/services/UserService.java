@@ -311,7 +311,7 @@ public class UserService {
             user1.setEmail(user.getEmail());
             user1.setRole(user.getRole());
             user1.setRegistryNumber(user.getRegistryNumber());
-            user1.setPassword(user.getPassword());
+            user1.setPassword(passwordEncoder.encode(user.getPassword()));
             user1.setUnion(user.getUnion());
             user1.setShifts(user.getShifts());
             userRepository.save(user1);
