@@ -79,3 +79,5 @@ Hier vind je een overzicht van alle beschikbare API-endpoints en kun je deze dir
 
 Voor verdere vragen of ondersteuning, neem contact op met het ontwikkelteam.
 ```
+Voor vragen over de app contacteer Nicolas Van Dyck via R0878921@student.thomasmore.be
+```
