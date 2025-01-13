@@ -33,6 +33,10 @@ project40.gladiolen-backend.app.jwt.secret-key=****
 #### Belangrijk:
 - **Database-URL**: Vervang `<host>`, `<port>` en `<database>` door de correcte waarden voor uw omgeving.
 - **Gebruikersnaam en wachtwoord**: Pas `<database-gebruiker>` en `<database-wachtwoord>` aan naar uw voorkeur.
+- **JWT secret key**: Je kan een secret key generen met het volgende commando.
+```bash
+openssl rand -hex 64
+```
 
 Indien u wijzigingen aanbrengt in de database-gebruiker of het wachtwoord, zorg er dan voor dat u deze gegevens ook aanpast in het Docker Compose-bestand voordat u de database start (zie stap 2).
 
@@ -68,10 +72,9 @@ Hier vind je een overzicht van alle beschikbare API-endpoints en kun je deze dir
 1. **Kan geen verbinding maken met de database**  
    Controleer of de gegevens in `application.properties` overeenkomen met die in `docker-compose.yml`.
 
-2. **Privacyverklaring ontbreekt**  
-   Controleer of de file `privacyverklaring.pdf` in de juiste map staat (`public/documents`) en correct is genoemd.
-
 ---
 
 Voor verdere vragen of ondersteuning, neem contact op met het ontwikkelteam.
+```
+Voor vragen over de app contacteer Nicolas Van Dyck via R0878921@student.thomasmore.be
 ```
