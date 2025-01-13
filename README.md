@@ -33,6 +33,10 @@ project40.gladiolen-backend.app.jwt.secret-key=****
 #### Belangrijk:
 - **Database-URL**: Vervang `<host>`, `<port>` en `<database>` door de correcte waarden voor uw omgeving.
 - **Gebruikersnaam en wachtwoord**: Pas `<database-gebruiker>` en `<database-wachtwoord>` aan naar uw voorkeur.
+- **JWT secret key**: Je kan een secret key generen met het volgende commando.
+```bash
+openssl rand -hex 64
+```
 
 Indien u wijzigingen aanbrengt in de database-gebruiker of het wachtwoord, zorg er dan voor dat u deze gegevens ook aanpast in het Docker Compose-bestand voordat u de database start (zie stap 2).
 
