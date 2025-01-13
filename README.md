@@ -5,7 +5,7 @@ Deze handleiding legt uit hoe u de Gladiolen backend-applicatie kunt opzetten en
 ## Vereisten
 - **Java 17** of hoger
 - **Docker** en **Docker Compose**
-- Een teksteditor voor het aanpassen van configuratiebestanden (bijv. VS Code, Nano)
+- Een IDE of editor die geschikt is voor Java-ontwikkeling (bijv. IntelliJ IDEA, Eclipse, of VS Code met Java-extensies)
 
 ## Stappen om de backend op te zetten
 
@@ -17,6 +17,17 @@ De configuratiegegevens bevinden zich in de file `application.properties`. U moe
 spring.datasource.url=jdbc:timescale://<host>:<port>/<database>
 spring.datasource.username=<database-gebruiker>
 spring.datasource.password=<database-wachtwoord>
+# mail properties
+# vul hier je gegevens van de mailprovider in, deze zal gebruikt worden om de OTP naar de gebruikers te sturen
+spring.mail.host=smtp.telenet.be
+spring.mail.port=587
+spring.mail.username=gladiolen@telenet.be
+spring.mail.password=*****
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true
+#JWT
+#Deze key wordt gebruikt om de JWT tokens mee te versleutelen.Dit is een HS512 key. Deze kan je zelf genereren en hier invullen
+project40.gladiolen-backend.app.jwt.secret-key=****
 ```
 
 #### Belangrijk:
@@ -43,18 +54,15 @@ environment:
   POSTGRES_DB: <database-naam>
 ```
 
-### 3. Privacyverklaring Toevoegen
-De applicatie vereist een PDF-bestand met de privacyregels. Dit bestand moet worden geplaatst in de map `public/documents` met de naam **`privacyverklaring.pdf`**.  
-
-#### Stappen:
-1. Maak de map `public/documents` indien deze nog niet bestaat.
-2. Voeg de PDF toe aan deze map en zorg ervoor dat deze exact **`privacyverklaring.pdf`** heet.
-
-4. Backend Applicatie Starten
+### 3. Backend Applicatie Starten
 
 Je kunt de applicatie starten zoals elke Java-applicatie, in je favoriete editor (bijvoorbeeld IntelliJ IDEA of VS Code). Zorg ervoor dat je Application.java uitvoert of gebruik de ingebouwde Maven-taken om de applicatie te starten.
 
-Indien alles correct is ingesteld, draait de applicatie en kun je deze benaderen via de opgegeven API-endpoints.
+Indien alles correct is ingesteld, draait de applicatie en kun je de API-documentatie bekijken via Swagger. Open hiervoor een browser en ga naar:
+```bash
+http://localhost:8080/swagger-ui/index.html
+```
+Hier vind je een overzicht van alle beschikbare API-endpoints en kun je deze direct testen.
 
 ## Veelvoorkomende Problemen
 1. **Kan geen verbinding maken met de database**  
