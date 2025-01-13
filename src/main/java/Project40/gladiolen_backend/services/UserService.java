@@ -91,6 +91,12 @@ public class UserService {
             if (userRepository.findByEmail(user.getEmail()).isPresent()) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Er bestaat reeds een gebruiker met dit emailadres");
             }
+            if (user.getRole() == Role.Lid && user.getPassword() != null) {
+                throw new IllegalArgumentException("Lid mag geen wachtwoord hebben");
+            }
+            if (user.getRole() != Role.Lid && (user.getPassword() == null || user.getPassword().isBlank())) {
+                throw new IllegalArgumentException("Hoofdverantwoordelijke of Admin moet een wachtwoord hebben");
+            }
             Tshirt savedTshirt = null;
             if (user.getTshirt() != null) {
                 savedTshirt = tshirtService.createTshirt(user.getTshirt());
@@ -100,6 +106,7 @@ public class UserService {
                 managedUnion = unionRepository.findById(user.getUnion().getId())
                         .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Union not found"));
             }
+            String encodedPassword = user.getPassword() != null ? passwordEncoder.encode(user.getPassword()) : null;
             User user1 = User.builder()
                     .firstName(user.getFirstName())
                     .lastName(user.getLastName())
@@ -107,7 +114,7 @@ public class UserService {
                     .email(user.getEmail())
                     .role(user.getRole())
                     .registryNumber(user.getRegistryNumber())
-                    .password(passwordEncoder.encode(user.getPassword()))
+                    .password(encodedPassword)
                     .union(managedUnion)
                     .tshirt(savedTshirt)
                     .shifts(user.getShifts())
@@ -261,11 +268,18 @@ public class UserService {
         if (user.getTshirt() != null) {
             savedTshirt = tshirtService.createTshirt(user.getTshirt());
         }
-        Union managedUnion = null;
+        if (user.getRole() == Role.Lid && user.getPassword() != null) {
+            throw new IllegalArgumentException("Lid mag geen wachtwoord hebben");
+        }
+        if (user.getRole() != Role.Lid && (user.getPassword() == null || user.getPassword().isBlank())) {
+            throw new IllegalArgumentException("Hoofdverantwoordelijke of Admin moet een wachtwoord hebben");
+        }
+            Union managedUnion = null;
         if (user.getUnion() != null && user.getUnion().getId() != null) {
             managedUnion = unionRepository.findById(user.getUnion().getId())
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Union not found"));
         }
+        String encodedPassword = user.getPassword() != null ? passwordEncoder.encode(user.getPassword()) : null;
         User user1 = User.builder()
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
@@ -273,7 +287,7 @@ public class UserService {
                 .email(user.getEmail())
                 .role(user.getRole())
                 .registryNumber(user.getRegistryNumber())
-                .password(passwordEncoder.encode(user.getPassword()))
+                .password(encodedPassword)
                 .union(managedUnion)
                 .tshirt(savedTshirt)
                 .shifts(user.getShifts())
@@ -297,6 +311,13 @@ public class UserService {
     @Transactional
     public void updateUser(Long id, User user) {
         User user1 = userRepository.findById(id).orElse(null);
+        if (user.getRole() == Role.Lid && user.getPassword() != null) {
+            throw new IllegalArgumentException("Lid mag geen wachtwoord hebben");
+        }
+        if (user.getRole() != Role.Lid && (user.getPassword() == null || user.getPassword().isBlank())) {
+            throw new IllegalArgumentException("Hoofdverantwoordelijke of Admin moet een wachtwoord hebben");
+        }
+        String encodedPassword = user.getPassword() != null ? passwordEncoder.encode(user.getPassword()) : null;
         if (user1 != null) {
             if (user1.getTshirt() != null) {
                 tshirtService.updateTshirt(user1.getTshirt().getId(), user.getTshirt());
@@ -311,7 +332,7 @@ public class UserService {
             user1.setEmail(user.getEmail());
             user1.setRole(user.getRole());
             user1.setRegistryNumber(user.getRegistryNumber());
-            user1.setPassword(passwordEncoder.encode(user.getPassword()));
+            user1.setPassword(encodedPassword);
             user1.setUnion(user.getUnion());
             user1.setShifts(user.getShifts());
             userRepository.save(user1);

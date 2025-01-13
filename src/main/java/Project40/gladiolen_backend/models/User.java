@@ -38,7 +38,7 @@ public class User {
     private Role role;
     @NotBlank
     private String registryNumber;
-    @NotBlank
+
     @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$", message = "Password must be a combination of letters and numbers")
     private String password;
 
