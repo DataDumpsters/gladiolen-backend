@@ -50,13 +50,11 @@ De applicatie vereist een PDF-bestand met de privacyregels. Dit bestand moet wor
 1. Maak de map `public/documents` indien deze nog niet bestaat.
 2. Voeg de PDF toe aan deze map en zorg ervoor dat deze exact **`privacyverklaring.pdf`** heet.
 
-### 4. Backend Applicatie Starten
-Start de backend-applicatie door het volgende commando uit te voeren:  
-```bash
-./gradlew bootRun
-```
+4. Backend Applicatie Starten
 
-Indien alles correct is ingesteld, draait de applicatie nu en kunt u deze benaderen via de opgegeven API-endpoints.
+Je kunt de applicatie starten zoals elke Java-applicatie, in je favoriete editor (bijvoorbeeld IntelliJ IDEA of VS Code). Zorg ervoor dat je Application.java uitvoert of gebruik de ingebouwde Maven-taken om de applicatie te starten.
+
+Indien alles correct is ingesteld, draait de applicatie en kun je deze benaderen via de opgegeven API-endpoints.
 
 ## Veelvoorkomende Problemen
 1. **Kan geen verbinding maken met de database**  
