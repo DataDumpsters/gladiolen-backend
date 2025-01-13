@@ -72,9 +72,6 @@ Hier vind je een overzicht van alle beschikbare API-endpoints en kun je deze dir
 1. **Kan geen verbinding maken met de database**  
    Controleer of de gegevens in `application.properties` overeenkomen met die in `docker-compose.yml`.
 
-2. **Privacyverklaring ontbreekt**  
-   Controleer of de file `privacyverklaring.pdf` in de juiste map staat (`public/documents`) en correct is genoemd.
-
 ---
 
 Voor verdere vragen of ondersteuning, neem contact op met het ontwikkelteam.
