@@ -27,7 +27,7 @@ public class Union  {
     private String accountNumber;
     private int numberOfParkingTickets;
 
-    @OneToMany(mappedBy = "union", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "union")
     @JsonIgnoreProperties("union")
     private List<User> users;
 
